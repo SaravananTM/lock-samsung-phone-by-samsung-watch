@@ -12,6 +12,8 @@ class BluetoothStateReceiver : BroadcastReceiver() {
 
     companion object {
         private const val TAG = "BTReceiver"
+        private const val PREFS = "lock_prefs"
+        private const val KEY_AUTO_LOCK = "auto_lock_enabled"
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -19,8 +21,15 @@ class BluetoothStateReceiver : BroadcastReceiver() {
 
         val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
         if (state == BluetoothAdapter.STATE_OFF) {
-            Log.d(TAG, "Bluetooth off — locking phone")
-            lockPhone(context)
+            val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            val autoLockEnabled = prefs.getBoolean(KEY_AUTO_LOCK, true)
+
+            if (autoLockEnabled) {
+                Log.d(TAG, "Bluetooth off + auto-lock enabled — locking phone")
+                lockPhone(context)
+            } else {
+                Log.d(TAG, "Bluetooth off but auto-lock disabled — skipping")
+            }
         }
     }
 

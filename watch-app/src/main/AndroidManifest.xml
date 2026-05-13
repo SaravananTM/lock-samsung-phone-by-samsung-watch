@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lockphone.watch">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-feature android:name="android.hardware.type.watch" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
 
     <application
         android:allowBackup="true"
@@ -36,5 +37,9 @@
                 android:name="androidx.wear.tiles.PREVIEW"
                 android:resource="@android:drawable/ic_lock_lock" />
         </service>
+
+        <service
+            android:name=".WristDetectionService"
+            android:exported="false" />
     </application>
 </manifest>
