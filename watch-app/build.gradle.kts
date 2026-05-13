@@ -39,4 +39,9 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.8.2")
     implementation("com.google.android.gms:play-services-wearable:18.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("androidx.wear.tiles:tiles:1.3.0")
+    implementation("androidx.wear.protolayout:protolayout:1.1.0")
+    implementation("androidx.wear.protolayout:protolayout-material:1.1.0")
+    implementation("androidx.wear.protolayout:protolayout-expression:1.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.7.3")
 }
