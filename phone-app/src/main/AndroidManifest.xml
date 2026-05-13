@@ -3,13 +3,14 @@
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
 
     <application
         android:name=".LockApp"
         android:allowBackup="true"
         android:label="Lock Phone (Companion)"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <activity
             android:name=".MainActivity"
@@ -29,6 +30,14 @@
                 <data
                     android:host="*"
                     android:pathPrefix="/lock-phone"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/toggle-auto-lock"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/get-auto-lock-state"
                     android:scheme="wear" />
             </intent-filter>
         </service>
