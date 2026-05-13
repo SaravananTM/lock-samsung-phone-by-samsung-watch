@@ -26,14 +26,11 @@ class MainActivity : ComponentActivity() {
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ) { results ->
-        if (results.values.all { it }) {
-            startListenerService()
-        }
-    }
+    ) { _ -> }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestPermissionsIfNeeded()
 
         setContent {
             MaterialTheme {
@@ -42,40 +39,15 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (hasRequiredPermissions()) {
-            startListenerService()
-        } else {
-            requestPermissions()
-        }
-    }
-
-    private fun hasRequiredPermissions(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            return ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
-        }
-        return true
-    }
-
-    private fun requestPermissions() {
+    private fun requestPermissionsIfNeeded() {
         val permissions = mutableListOf<String>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissions.add(Manifest.permission.POST_NOTIFICATIONS)
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.BLUETOOTH_CONNECT)
+            }
         }
         if (permissions.isNotEmpty()) {
             permissionLauncher.launch(permissions.toTypedArray())
-        }
-    }
-
-    private fun startListenerService() {
-        val dpm = getSystemService(DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        if (dpm.isAdminActive(adminComponent)) {
-            val intent = Intent(this, LockListenerService::class.java)
-            startForegroundService(intent)
         }
     }
 
@@ -100,7 +72,7 @@ class MainActivity : ComponentActivity() {
             if (isAdmin) {
                 Text("Device Admin is ACTIVE.")
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Listener service is running. Your watch can now lock this phone.")
+                Text("Your phone will lock automatically when the watch disconnects or Bluetooth is turned off.")
             } else {
                 Text("You need to grant Device Admin permission for this app to lock the screen.")
                 Spacer(modifier = Modifier.height(16.dp))
